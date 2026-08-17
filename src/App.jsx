@@ -20,6 +20,19 @@ function parseHash() {
   return { route: route.replace(/\/+$/, '') || '/', params };
 }
 
+/* Landing-page section ids that plain `#anchor` links point to. Without this, the
+   hash router would read `#features` as the route `features` and fall through to the
+   dashboard instead of scrolling to the section. */
+const LANDING_SECTIONS = ['features', 'templates', 'faq', 'top', 'free'];
+
+function ScrollToAnchor({ id }) {
+  useEffect(() => {
+    if (id === 'top') window.scrollTo({ top: 0 });
+    else document.getElementById(id)?.scrollIntoView();
+  }, [id]);
+  return null;
+}
+
 export default function App() {
   const [toast, setToast] = useState(null);
   const [, force] = useState(0);
@@ -69,13 +82,16 @@ export default function App() {
   }
 
   /* ---------- marketing landing ---------- */
-  if (route === '/' || route === '') {
+  const section = route !== '/' && route !== '' ? route.replace(/^\/+/, '') : null;
+  const isLanding = route === '/' || route === '' || LANDING_SECTIONS.includes(section);
+  if (isLanding) {
     return (
       <div className="app">
         <Navbar page="home" onOpenBuilder={openBuilder} />
         <Home onOpenBuilder={openBuilder} />
         <Footer onOpenBuilder={openBuilder} />
         {toast && <div className="toast">{toast}</div>}
+        {section && LANDING_SECTIONS.includes(section) && <ScrollToAnchor id={section} />}
       </div>
     );
   }

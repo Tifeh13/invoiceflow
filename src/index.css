@@ -516,6 +516,7 @@ body.dark .appnav-links a.active { background: rgba(79, 70, 229, 0.16); color: #
 
 /* ---------- clients ---------- */
 .client-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+.client-grid > * { min-width: 0; }
 .client-card {
   background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px;
   display: flex; flex-direction: column; gap: 14px; box-shadow: var(--shadow-sm);
@@ -992,6 +993,7 @@ body.dark .method.active { background: rgba(79, 70, 229, 0.16); color: #a5b4fc; 
 
 @media (max-width: 1024px) {
   .builder-body { grid-template-columns: 1fr; }
+  .builder-body > * { min-width: 0; }
   .builder-preview { position: static; }
   .preview-wrap { max-height: none; }
   .hero-grid { grid-template-columns: 1fr; gap: 64px; }
@@ -1025,6 +1027,11 @@ body.dark .method.active { background: rgba(79, 70, 229, 0.16); color: #a5b4fc; 
   .item-row { grid-template-columns: 1fr; }
   .item-remove { margin-bottom: 0; width: 100%; height: 36px; }
   .donut-legend { position: static; transform: none; margin-top: 14px; align-items: center; }
+  .toolbar-inner { gap: 8px; padding: 8px 14px; }
+  .toolbar-inner .kbd { display: none; }
+  .toolbar-inner select.input-sm { flex: 1 1 0; min-width: 0; width: auto; }
+  .toolbar-currency { flex: none; min-width: 0; }
+  .toolbar-currency select { width: 88px; }
   .table-row, .invoice-row, .expense-row { grid-template-columns: minmax(0, 1fr) auto; }
   .row-actions { grid-column: 1 / -1; justify-content: flex-start; }
   .sheet { padding: 30pt 24pt 26pt; }
