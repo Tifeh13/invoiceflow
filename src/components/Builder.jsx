@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   ArrowLeft, Plus, Trash2, Printer, Save, Share2, FileText, Download, Link2, Send,
   RefreshCw, CheckCircle2, Briefcase,
@@ -34,6 +34,55 @@ const kindLabel = (kind) => {
   if (kind === 'fixed') return 'Fee';
   return 'Qty';
 };
+
+const SHEET_W = 794; // 210mm in px — matches .sheet width
+
+function PreviewScaler({ children }) {
+  const wrapRef = useRef(null);
+  const innerRef = useRef(null);
+  const [dims, setDims] = useState({ scale: 1, height: 'auto' });
+
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    const inner = innerRef.current;
+    if (!wrap || !inner) return;
+
+    const update = () => {
+      const wrapW = wrap.clientWidth;
+      if (wrapW >= SHEET_W) {
+        setDims({ scale: 1, height: 'auto' });
+        return;
+      }
+      const s = Math.max(0.28, (wrapW - 40) / SHEET_W);
+      setDims({ scale: s, height: inner.scrollHeight * s });
+    }
+
+    const ro = new ResizeObserver(update);
+    ro.observe(wrap);
+    // also observe the inner sheet so height is recalculated when content grows
+    ro.observe(inner);
+    update();
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <div className="preview-wrap" ref={wrapRef}>
+      <div style={{ height: dims.height }}>
+        <div
+          ref={innerRef}
+          className="preview-scaler"
+          style={{
+            width: SHEET_W,
+            transformOrigin: 'top left',
+            transform: dims.scale < 1 ? `scale(${dims.scale})` : undefined,
+          }}
+        >
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Builder({ mode, invoiceId, clientId, onBack, onToast, navigate }) {
   const settings = getSettings();
@@ -347,9 +396,9 @@ export default function Builder({ mode, invoiceId, clientId, onBack, onToast, na
             </div>
           </div>
 
-          <div className="preview-wrap">
+          <PreviewScaler>
             <InvoicePreview invoice={invoice} settings={settings} convertedTotal={converted} />
-          </div>
+          </PreviewScaler>
 
           <p className="print-hint">
             <FileText size={13} /> Print is pixel-perfect — choose <strong>“Save as PDF”</strong> in the dialog ({settings.paper}).

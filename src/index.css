@@ -705,9 +705,10 @@ body.dark .onboarding { background: rgba(79, 70, 229, 0.1); border-color: rgba(7
 }
 .preview-wrap {
   background: var(--preview-bg); border-radius: 18px; padding: 20px;
-  overflow: auto; max-height: calc(100vh - 170px);
+  overflow-x: hidden; overflow-y: auto; max-height: calc(100vh - 170px);
   border: 1px solid var(--line);
 }
+.preview-scaler { transform-origin: top left; }
 .print-hint {
   display: flex; align-items: center; gap: 8px; justify-content: center;
   margin: 14px 0 0; font-size: 12.5px; color: var(--slate-500);
@@ -972,6 +973,7 @@ body.dark .method.active { background: rgba(79, 70, 229, 0.16); color: #a5b4fc; 
   .builder-body, .public-grid { display: block !important; padding: 0 !important; max-width: none !important; }
   .builder-preview { position: static !important; }
   .preview-wrap, .public-sheet { overflow: visible !important; max-height: none !important; padding: 0 !important; background: #fff !important; border: none !important; }
+  .preview-scaler { transform: none !important; width: 210mm !important; height: auto !important; }
   .inv-head, .tmpl-modern .inv-head, .tmpl-bold .inv-head, .tmpl-aurora .inv-head { margin: 0; border-radius: 0; }
 }
 
